@@ -1,15 +1,14 @@
 import * as Assets from '../assets';
 
 export default class Title extends Phaser.State {
-    private backgroundTemplateSprite: Phaser.Sprite = null;
-    private googleFontText: Phaser.Text = null;
-    private localFontText: Phaser.Text = null;
-    private pixelateShader: Phaser.Filter = null;
-    private bitmapFontText: Phaser.BitmapText = null;
-    private blurXFilter: Phaser.Filter.BlurX = null;
-    private blurYFilter: Phaser.Filter.BlurY = null;
-    private sfxAudiosprite: Phaser.AudioSprite = null;
-    private mummySpritesheet: Phaser.Sprite = null;
+    private backgroundTemplateSprite: Phaser.Sprite
+    private googleFontText: Phaser.Text
+    private localFontText: Phaser.Text
+    private pixelateShader: Phaser.Filter
+    private bitmapFontText: Phaser.BitmapText
+    private blurXFilter: Phaser.Filter.BlurX
+    private blurYFilter: Phaser.Filter.BlurY
+    private sfxAudiosprite: Phaser.AudioSprite
 
     // This is any[] not string[] due to a limitation in TypeScript at the moment;
     // despite string enums working just fine, they are not officially supported so we trick the compiler into letting us do it anyway.
@@ -35,16 +34,12 @@ export default class Title extends Phaser.State {
         this.bitmapFontText = this.game.add.bitmapText(this.game.world.centerX, this.game.world.centerY + 100, Assets.BitmapFonts.FontsFontFnt.getName(), 'Bitmap Fonts + Filters .js (Blur here)!', 40);
         this.bitmapFontText.anchor.setTo(0.5);
 
-        this.blurXFilter = this.game.add.filter(Assets.Scripts.ScriptsBlurX.getName()) as Phaser.Filter.BlurX;
-        this.blurXFilter.blur = 8;
-        this.blurYFilter = this.game.add.filter(Assets.Scripts.ScriptsBlurY.getName()) as Phaser.Filter.BlurY;
-        this.blurYFilter.blur = 2;
+        this.blurXFilter = this.game.add.filter(Assets.Scripts.ScriptsBlurX.getName()) as Phaser.Filter.BlurX
+        this.blurXFilter.blur = 8
+        this.blurYFilter = this.game.add.filter(Assets.Scripts.ScriptsBlurY.getName()) as Phaser.Filter.BlurY
+        this.blurYFilter.blur = 2
 
         this.bitmapFontText.filters = [this.blurXFilter, this.blurYFilter];
-
-        this.mummySpritesheet = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY + 175, Assets.Spritesheets.SpritesheetsMetalslugMummy.getName());
-        this.mummySpritesheet.animations.add('walk');
-        this.mummySpritesheet.animations.play('walk', 30, true);
 
         this.sfxAudiosprite = this.game.add.audioSprite(Assets.Audiosprites.AudiospritesSfx.getName());
 

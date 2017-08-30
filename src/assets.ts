@@ -6,19 +6,15 @@ export namespace Images {
 
         static getPNG(): string { return require('assets/images/background_template.png'); }
     }
+    export class ImagesSquareTest {
+        static getName(): string { return 'squareTest'; }
+
+        static getPNG(): string { return require('assets/images/squareTest.png'); }
+    }
 }
 
 export namespace Spritesheets {
-    export class SpritesheetsMetalslugMummy {
-        static getName(): string { return 'metalslug_mummy'; }
-
-        static getPNG(): string { return require('assets/spritesheets/metalslug_mummy.[37,45,18,0,0].png'); }
-        static getFrameWidth(): number { return 37; }
-        static getFrameHeight(): number { return 45; }
-        static getFrameMax(): number { return 18; }
-        static getMargin(): number { return 0; }
-        static getSpacing(): number { return 0; }
-    }
+    class IExistSoTypeScriptWillNotComplainAboutAnEmptyNamespace {}
 }
 
 export namespace Atlases {
@@ -157,6 +153,11 @@ export namespace Scripts {
     }
 }
 export namespace Shaders {
+    export class ShadersBox {
+        static getName(): string { return 'box'; }
+
+        static getFRAG(): string { return require('assets/shaders/box.frag'); }
+    }
     export class ShadersPixelate {
         static getName(): string { return 'pixelate'; }
 
