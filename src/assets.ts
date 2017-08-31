@@ -163,6 +163,16 @@ export namespace Shaders {
 
         static getFRAG(): string { return require('assets/shaders/pixelate.frag'); }
     }
+    export class ShadersPlanet {
+        static getName(): string { return 'planet'; }
+
+        static getFRAG(): string { return require('assets/shaders/planet.frag'); }
+    }
+    export class ShadersSky {
+        static getName(): string { return 'sky'; }
+
+        static getFRAG(): string { return require('assets/shaders/sky.frag'); }
+    }
 }
 export namespace Misc {
     class IExistSoTypeScriptWillNotComplainAboutAnEmptyNamespace {}
