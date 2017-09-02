@@ -2,7 +2,7 @@ import * as Assets from '../../../assets'
 
 export default class Planet extends Phaser.Sprite {
   constructor(game: Phaser.Game, x: number, y: number, radius: number) {
-    super(game, x, y)
+    super(game, x, y, Assets.Images.ImagesBackgroundTemplate.getName())
     this.width = radius
     this.height = radius
 
