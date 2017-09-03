@@ -1,6 +1,6 @@
 #define GLSLIFY 1
 
-precision mediump float;
+precision highp float;
 
 varying vec2 vTextureCoord;
 

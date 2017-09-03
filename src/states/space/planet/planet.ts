@@ -1,4 +1,6 @@
 import * as Assets from '../../../assets'
+const glsl = require('glslify')
+const shader = require('raw-loader!glslify!./planetShader.frag')
 
 interface IPlanetUniforms {
   planetPosition: any
@@ -7,7 +9,8 @@ interface IPlanetUniforms {
 }
 
 export default class Planet extends Phaser.Sprite {
-  private _uniforms: any
+  private _shader: Phaser.Filter
+  private _uniforms: IPlanetUniforms
 
   constructor(game: Phaser.Game, x: number, y: number, radius: number) {
     super(game, x, y, Assets.Images.ImagesBackgroundTemplate.getName())
@@ -15,19 +18,18 @@ export default class Planet extends Phaser.Sprite {
     this.height = radius
 
     this._uniforms = {
-      planetPosition: { type: '3f', value: {x, y, z: 0.0 } },
+      planetPosition: { type: '3f', value: {x, y: this.game.height - y, z: 0.0 } },
       planetSize: { type: '1f', value: radius },
-      sunPosition: { type: '3f', value: { x: 0.0, y: 0.0, z: 0.0 } },
+      sunPosition: { type: '3f', value: { x: 200.0, y: this.game.height - this.game.height, z: 0.0 } },
     }
 
-    const planetShader = new Phaser.Filter(this.game, this._uniforms, this.game.cache.getShader('planetShader'))
-    planetShader.setResolution(radius, radius)
-    this.filters = [planetShader]
-
-    planetShader.update()
+    this._shader = new Phaser.Filter(this.game, this._uniforms, shader)
+    this._shader.setResolution(radius, radius)
+    this.filters = [ this._shader ]
   }
 
-  public update() {
-
+  public refresh(sunPosition: Phaser.Point) {
+    this._uniforms.sunPosition.value = { x: sunPosition.x, y: this.game.height - sunPosition.y, z: 100.0 }
+    this._shader.syncUniforms()
   }
 }
