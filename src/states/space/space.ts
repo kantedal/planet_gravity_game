@@ -11,7 +11,7 @@ export default class Space extends Phaser.State {
     boxShader.setResolution(this.game.width, this.game.height)
     background.filters = [boxShader]
 
-    const planet = new Planet(this.game, 100, 100, 80)
+    const planet = new Planet(this.game, 100, 100, 200)
     this.game.add.existing(planet)
     this.game.camera.flash(0x000000, 1000)
   }

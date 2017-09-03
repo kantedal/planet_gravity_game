@@ -61,6 +61,10 @@ module.exports = {
         }
     },
     module: {
+        loaders: [
+            { test: /\.(glsl|frag|vert)$/, loader: 'raw', exclude: /node_modules/ },
+            { test: /\.(glsl|frag|vert)$/, loader: 'glslify', exclude: /node_modules/ }
+        ],
         rules: [
             { test: /\.ts$/, enforce: 'pre', loader: 'tslint-loader' },
             { test: /assets(\/|\\)/, loader: 'file-loader?name=assets/[hash].[ext]' },

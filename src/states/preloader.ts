@@ -23,7 +23,6 @@ export default class Preloader extends Phaser.State {
     this.game.load.shader('boxShader', Assets.Shaders.ShadersBox.getFRAG())
     this.game.load.shader('skyShader', Assets.Shaders.ShadersSky.getFRAG())
     const planetShader = this.game.load.shader('planetShader', Assets.Shaders.ShadersPlanet.getFRAG())
-    //this.game.
 
     AssetUtils.Loader.loadAllAssets(this.game, this.waitForSoundDecoding, this)
   }

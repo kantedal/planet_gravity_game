@@ -11,6 +11,11 @@ export namespace Images {
 
         static getPNG(): string { return require('assets/images/squareTest.png'); }
     }
+    export class ImagesTest {
+        static getName(): string { return 'test'; }
+
+        static getPNG(): string { return require('assets/images/test.png'); }
+    }
 }
 
 export namespace Spritesheets {
