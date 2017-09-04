@@ -30,7 +30,7 @@ export default class PlanetGlow extends Phaser.Sprite {
   }
 
   public refresh(sunPosition: Phaser.Point) {
-    this._uniforms.sunPosition.value = { x: sunPosition.x, y: this.game.height - sunPosition.y, z: 100.0 }
+    this._uniforms.sunPosition.value = { x: sunPosition.x, y: sunPosition.y, z: 100.0 }
     this._shader.syncUniforms()
   }
 }

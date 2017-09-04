@@ -35,19 +35,20 @@ void main(void) {
   vec4 transparent = vec4(0, 0, 0, 0);
   vec3 planetColor = vec3(0.4, 0.4, 0.4) * (1.0 - 0.2 * abs(noise(uv * 24.0)));
 
+  vec3 normal = normalize(vec3(vec2(0.5) - uv, -(1.0 - 2.0 * centerDistance)) * 0.75);
+  vec3 position = planetPosition + vec3(uv.x * planetSize, uv.y * planetSize, planetSize * 0.5 * (1.0 - length(abs(normal.xy))));
+
   vec3 sunVector = normalize(sunPosition - planetPosition);
   float sunDistance = distance(vec3(sunPosition.xy, 0.0), planetPosition);
 
-  vec3 normal = normalize(vec3(vec2(0.5) - uv, -(1.0 - 2.0 * centerDistance)) * 0.75);
 
-  vec3 ka = planetColor * 0.15;
+  vec3 ka = planetColor * 0.2;
   vec3 kd = planetColor * 1.0;
   vec3 ks = vec3(0.2);
 
-  vec3 pos = planetPosition + vec3(planetSize - uv.x * planetSize, uv.y * planetSize, planetSize * 0.5 * (1.0 - length(abs(normal.xy))));
-  planetColor = phong(ka, kd, ks, 5.0, normal, pos);
+  // planetColor = phong(ka, kd, ks, 5.0, normal, position);
 
-  //planetColor = clamp(1.0 - sunDistance / 400.0, 0.5, 1.5) * clamp(dot(sunVector, -normal), 0.2, 1.0) * planetColor;
+  planetColor = clamp(1.0 - sunDistance / 400.0, 0.5, 1.5) * clamp(dot(sunVector, -normal), 0.2, 1.0) * planetColor;
 
   // Draw planet
   if (centerDistance < 0.5 - borderSize) {

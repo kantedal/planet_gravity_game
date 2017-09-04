@@ -10,7 +10,7 @@ export default class Sun extends Phaser.Sprite {
   private _uniforms: ISunUniforms
 
   constructor(game: Phaser.Game, x: number, y: number, radius: number) {
-    super(game, x, y, Assets.Images.ImagesBackgroundTemplate.getName())
+    super(game, x, y)
     this.width = radius
     this.height = radius
     // this.anchor.set(0.5, 0.5)
@@ -19,7 +19,6 @@ export default class Sun extends Phaser.Sprite {
       sunSize: { type: '1f', value: radius },
       sunPosition: { type: '3f', value: {x, y, z: 0.0 } },
     }
-    console.log(shader)
 
     const sunShader = new Phaser.Filter(this.game, this._uniforms, shader)
     sunShader.setResolution(radius, radius)
@@ -27,6 +26,6 @@ export default class Sun extends Phaser.Sprite {
   }
 
   public update() {
-
+    console.log(this.position.x)
   }
 }
