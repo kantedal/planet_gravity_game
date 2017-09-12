@@ -13,7 +13,7 @@ uniform float time;
 uniform vec2 grainRand;
 
 void main(void) {
-  vec3 backgroundColor = texture2D(uSampler, vTextureCoord).xyz * vec3(1.0, 1.0, 1.0);
+  vec3 backgroundColor = texture2D(uSampler, vec2(1.0, 1.0) - vTextureCoord).xyz * vec3(1.0, 1.0, 1.0);
 
   float grainSize = 1.5;
   vec3 g = vec3(grain(vTextureCoord + grainRand, vec2(800.0, 600.0) / grainSize));

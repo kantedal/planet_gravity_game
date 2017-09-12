@@ -27,7 +27,10 @@ vec3 phong(vec3 ka, vec3 kd, vec3 ks, float alpha, vec3 normal, vec3 position) {
 }
 
 void main(void) {
-  vec2 uv = vTextureCoord / vec2(planetSize / screenSize.x, planetSize / screenSize.y);
+  vec2 cameraPosTexCoord = vec2(cameraPosition.x, -cameraPosition.y) / screenSize;
+  vec2 planetPosTexCoord = (vec2(planetPosition.x, planetPosition.y) - vec2(planetSize / 2.0)) / screenSize;
+
+  vec2 uv = (vTextureCoord + cameraPosTexCoord - planetPosTexCoord) / vec2(planetSize / screenSize.x, planetSize / screenSize.y);
   float centerDistance = distance(uv, vec2(0.5, 0.5));
   float borderSize = 0.005;
   float glowSize = 0.1;
@@ -61,17 +64,15 @@ void main(void) {
     gl_FragColor = vec4(planetColor, 1.0) * interpolateFactor + transparent * (1.0 - interpolateFactor);
     return;
   }
-//  // Draw glow
-//  else if (centerDistance < 0.5) {
-//    vec4 glowColor = vec4(0.1, 0.1, 0.1, 0.0);
-//    float interpolateFactor = (0.5 - centerDistance) / glowSize;
-//    gl_FragColor = glowColor * interpolateFactor + transparent * (1.0 - interpolateFactor);
-//
-//    if (centerDistance < 0.5 - glowSize + borderSize && centerDistance > 0.5 - glowSize) {
-//       float interpolateFactor2 = (0.5 - centerDistance - glowSize + borderSize) / borderSize;
-//       gl_FragColor = glowColor * (1.0 - interpolateFactor) + transparent * interpolateFactor;
-//    }
-//
-//    return;
-//  }
 }
+
+//precision mediump float;
+//
+//varying vec2       vTextureCoord;
+//varying vec4       vColor;
+//uniform sampler2D  uSampler;
+//
+//void main(void) {
+//    gl_FragColor = texture2D(uSampler, vTextureCoord);
+//    gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.2126 * gl_FragColor.r + 0.7152 * gl_FragColor.g + 0.0722 * gl_FragColor.b), 1.0);
+//}

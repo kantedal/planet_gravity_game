@@ -10,10 +10,14 @@ uniform vec3 planetPosition;
 uniform float planetSize;
 uniform vec3 sunPosition;
 uniform vec2 screenSize;
+uniform vec3 cameraPosition;
 
 
 void main(void) {
-  vec2 uv = vTextureCoord / vec2(planetSize / screenSize.x, planetSize / screenSize.y);
+  vec2 cameraPosTexCoord = vec2(cameraPosition.x, -cameraPosition.y) / screenSize;
+  vec2 planetPosTexCoord = (vec2(planetPosition.x, planetPosition.y) - vec2(planetSize / 2.0)) / screenSize;
+
+  vec2 uv = (vTextureCoord + cameraPosTexCoord - planetPosTexCoord) / vec2(planetSize / screenSize.x, planetSize / screenSize.y);
   float centerDistance = distance(uv, vec2(0.5, 0.5));
   float glowSize = 0.1;
 
