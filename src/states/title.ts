@@ -1,4 +1,4 @@
-import * as Assets from '../assets';
+import * as Assets from '../assets'
 
 export default class Title extends Phaser.State {
     private backgroundTemplateSprite: Phaser.Sprite

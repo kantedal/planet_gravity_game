@@ -6,6 +6,7 @@ interface IPlanetGlowUniforms {
   planetPosition: any
   planetSize: any
   sunPosition: any
+  screenSize: any
 }
 
 export default class PlanetGlow extends Phaser.Sprite {
@@ -22,6 +23,7 @@ export default class PlanetGlow extends Phaser.Sprite {
       planetPosition: { type: '3f', value: {x, y: this.game.height - y, z: 0.0 } },
       planetSize: { type: '1f', value: radius },
       sunPosition: { type: '3f', value: { x: 200.0, y: this.game.height - this.game.height, z: 0.0 } },
+      screenSize: { type: '2f', value: { x: this.game.width , y: this.game.height }}
     }
 
     this._shader = new Phaser.Filter(this.game, this._uniforms, shader)

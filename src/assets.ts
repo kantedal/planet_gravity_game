@@ -6,6 +6,16 @@ export namespace Images {
 
         static getPNG(): string { return require('assets/images/background_template.png'); }
     }
+    export class ImagesSpaceShuttleBlack {
+        static getName(): string { return 'space_shuttle_black'; }
+
+        static getPNG(): string { return require('assets/images/space_shuttle_black.png'); }
+    }
+    export class ImagesSpaceShuttle {
+        static getName(): string { return 'space_shuttle'; }
+
+        static getPNG(): string { return require('assets/images/space_shuttle.png'); }
+    }
     export class ImagesSquareTest {
         static getName(): string { return 'squareTest'; }
 

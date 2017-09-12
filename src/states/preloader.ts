@@ -25,6 +25,8 @@ export default class Preloader extends Phaser.State {
     const planetShader = this.game.load.shader('planetShader', Assets.Shaders.ShadersPlanet.getFRAG())
 
     AssetUtils.Loader.loadAllAssets(this.game, this.waitForSoundDecoding, this)
+
+    this.physics.startSystem(Phaser.Physics.ARCADE)
   }
 
   private waitForSoundDecoding(): void {

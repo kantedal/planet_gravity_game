@@ -1,9 +1,11 @@
 const shader = require('raw-loader!glslify!./spaceShader.frag')
 
+import * as Assets from '../../assets'
 import Planet from './planet/planet'
 import PlanetGlow from './planet/planet-glow'
 import Sun from './sun/sun'
 import Sky from './sky/sky'
+import Player from './player/player'
 
 interface ISpaceUniforms {
   screenSize: any
@@ -12,6 +14,7 @@ interface ISpaceUniforms {
 }
 
 export default class Space extends Phaser.State {
+  private _player: Player
   private _sky: Sky
   private _sun: Sun
   private _planets: Planet[]
@@ -24,15 +27,14 @@ export default class Space extends Phaser.State {
   private _outputSprite: Phaser.Sprite
 
   public create(): void {
+    this.game.world.setBounds(0, 0, 2000, 2000)
     this._spaceGroup = new Phaser.Group(this.game)
 
     this._sky = new Sky(this.game)
     this._spaceGroup.add(this._sky)
-    // // this.game.add.existing(this._sky)
 
     this._sun = new Sun(this.game, 200, 0, 100)
     // this._spaceGroup.add(this._sun)
-    // this.game.add.existing(this._sun)
 
     this._planets = []
     this._planets.push(new Planet(this.game, 100, 100, 200))
@@ -47,16 +49,16 @@ export default class Space extends Phaser.State {
     this._planetGlow.push(new PlanetGlow(this.game, 600, 200, 180))
     this._planets.push(new Planet(this.game, 600, 200, 150))
 
-
     for (const planetGlow of this._planetGlow) {
       this._spaceGroup.add(planetGlow)
-      // this.game.add.existing(planetGlow)
     }
 
     for (const planet of this._planets) {
       this._spaceGroup.add(planet)
-      // this.game.add.existing(planet)
     }
+
+    this._player = new Player(this.game)
+    this._spaceGroup.add(this._player)
 
     this.game.camera.flash(0x000000, 1000)
 
@@ -71,7 +73,7 @@ export default class Space extends Phaser.State {
     this._spaceShader = new Phaser.Filter(this.game, this._spaceShaderUniforms, shader)
     this._outputSprite.filters = [ this._spaceShader ]
 
-
+    // this.game.add.sprite(0, 0,  Assets.Images.ImagesSpaceShuttle.getName())
     // this.game.add.filter('spaceShader', shader)
   }
 

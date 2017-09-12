@@ -42,7 +42,7 @@
     "file-loader": "0.11.2",
     "html-webpack-plugin": "2.29.0",
     "npm-check": "5.4.5",
-    "phaser-ce": "2.8.3",
+    "phaser-ce": "2.8.3np",
     "pngjs-image": "0.11.7",
     "shelljs": "0.7.8",
     "ts-loader": "2.3.2",

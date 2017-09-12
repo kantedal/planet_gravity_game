@@ -9,10 +9,11 @@ uniform vec2 resolution;
 uniform vec3 planetPosition;
 uniform float planetSize;
 uniform vec3 sunPosition;
+uniform vec2 screenSize;
 
 
 void main(void) {
-  vec2 uv = vTextureCoord / vec2(planetSize / 800.0, planetSize / 600.0);
+  vec2 uv = vTextureCoord / vec2(planetSize / screenSize.x, planetSize / screenSize.y);
   float centerDistance = distance(uv, vec2(0.5, 0.5));
   float glowSize = 0.1;
 
@@ -24,7 +25,7 @@ void main(void) {
   vec3 normal = -normalize(vec3(vec2(0.5) - uv, -(1.0 - 2.0 * centerDistance)) * 0.75);
 
   vec4 transparent = vec4(0, 0, 0, 0);
-  vec4 glowColor = vec4(0.1, 0.1, 0.1, 0.5) * 2.0 * clamp(dot(normal, sunVector), 0.2, 1.0) * sunDistanceFactor;
+  vec4 glowColor = vec4(0.1, 0.1, 0.1, 0.5) * 1.25 * clamp(dot(normal, sunVector), 0.2, 1.0) * sunDistanceFactor;
 
   // Draw planet
   if (centerDistance < 0.5 - glowSize) {
