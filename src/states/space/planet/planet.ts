@@ -54,6 +54,18 @@ export default class Planet extends Phaser.Sprite {
     this._shader.syncUniforms()
   }
 
+  public calculateGravityForce(point: Phaser.Point) {
+    const maxPlanetAttraction = 500
+    const maxDistanceFromPlanet = 200
+
+    const distanceToPlanet = Phaser.Point.distance(point, this.planetPosition) - this._radius
+    const angle = Math.atan2(this.planetPosition.y - point.y, this.planetPosition.x - point.x)
+
+    const gravityInfluence = maxPlanetAttraction * Math.max(Math.min((maxDistanceFromPlanet - distanceToPlanet) / maxDistanceFromPlanet, 1.0), 0.0)
+    // console.log(gravityInfluence)
+    return new Phaser.Point(Math.cos(angle) * gravityInfluence,  Math.sin(angle) * gravityInfluence)
+  }
+
   get radius(): number { return this._radius }
   get planetPosition(): Phaser.Point { return this._planetPosition }
 }

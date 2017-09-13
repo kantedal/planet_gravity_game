@@ -19,6 +19,10 @@ export default class Player extends Phaser.Group {
 
   private _lastPosition: Phaser.Point
 
+  private _bullets: any
+  private _fireRate: number = 100
+  private _nextFire: number = 0
+
   constructor(game: Phaser.Game, private _planets: Planet[]) {
     super(game)
 
@@ -31,7 +35,6 @@ export default class Player extends Phaser.Group {
 
     this._lastPosition = new Phaser.Point(300, 300)
 
-    // this.game.physics.enable(this._spaceShuttle, Phaser.Physics.ARCADE)
     this.game.camera.follow(this._spaceShuttle, Phaser.Camera.FOLLOW_LOCKON, 0.05, 0.05)
     this.game.physics.p2.restitution = 0.0
     this._cursors = this.game.input.keyboard.createCursorKeys()
@@ -51,6 +54,20 @@ export default class Player extends Phaser.Group {
 
     // this._spaceShuttle.addChildAt(this._spaceShuttleTrail, 0)
     // this.add(this._spaceShuttleTrail)
+
+    this._bullets = this.game.add.group()
+    this._bullets.enableBody = true
+    this._bullets.physicsBodyType = Phaser.Physics.P2JS
+    this._bullets.createMultiple(50, Assets.Images.ImagesFire1.getName())
+    this._bullets.forEach((bullet: Phaser.Sprite) => {
+      bullet.width = 10
+      bullet.height = 10
+      bullet.body.setCircle(3)
+      bullet.lifespan = 3000
+    })
+
+    this.game.input.mouse.capture = true
+    this.game.input.mspointer.stop()
   }
 
   public update() {
@@ -65,25 +82,51 @@ export default class Player extends Phaser.Group {
 
     this._lastPosition.set(this._spaceShuttle.position.x, this._spaceShuttle.position.y)
 
-    const speed = 400
+    const accelerationSpeed = 600
+    const speed = 200
+
     const angle = Math.atan2(this._crosshair.y - this._spaceShuttle.y, this._crosshair.x - this._spaceShuttle.x)
+    const moveDirection = new Phaser.Point(Math.cos(angle), Math.sin(angle))
 
+    // Accelerate
+    if (this.game.input.activePointer.rightButton.isDown) {
+      this._spaceShuttle.body.force.x = moveDirection.x * accelerationSpeed
+      this._spaceShuttle.body.force.y = moveDirection.y * accelerationSpeed
+    }
+    else {
+      this._spaceShuttle.body.force.x = moveDirection.x * speed
+      this._spaceShuttle.body.force.y = moveDirection.y * speed
+    }
+
+    // Shoot
     if (this.game.input.activePointer.leftButton.isDown) {
-      this._spaceShuttle.body.force.x = Math.cos(angle) * speed
-      this._spaceShuttle.body.force.y = Math.sin(angle) * speed
+      console.log('SHOOOT')
+      if (this.game.time.now > this._nextFire && this._bullets.countDead() > 0) {
+        this._nextFire = this.game.time.now + this._fireRate
+        const bullet = this._bullets.getFirstDead()
+        const bulletDirection = velocity.clone().normalize()
+
+        bullet.reset(this._spaceShuttle.x + bulletDirection.x * 20, this._spaceShuttle.y + bulletDirection.y * 20)
+        bullet.body.velocity.x = bulletDirection.x * 400
+        bullet.body.velocity.y = bulletDirection.y * 400
+        bullet.alpha = 1.0
+        bullet.lifespan = 3000
+      }
     }
 
-    const maxPlanetAttraction = 500
-    const maxDistanceFromPlanet = 200
     for (const planet of this._planets) {
-      const distanceToPlanet = Phaser.Point.distance(this._spaceShuttle, planet.planetPosition) - planet.radius
-      const angle = Math.atan2(planet.planetPosition.y - this._spaceShuttle.y, planet.planetPosition.x - this._spaceShuttle.x)
+      const planetGravity = planet.calculateGravityForce(this._spaceShuttle.position)
+      this._spaceShuttle.body.force.x += planetGravity.x
+      this._spaceShuttle.body.force.y += planetGravity.y
 
-      const gravityInfluence = maxPlanetAttraction * Math.max(Math.min((maxDistanceFromPlanet - distanceToPlanet) / maxDistanceFromPlanet, 1.0), 0.0)
-      // console.log(gravityInfluence)
-      this._spaceShuttle.body.force.x += Math.cos(angle) * gravityInfluence
-      this._spaceShuttle.body.force.y += Math.sin(angle) * gravityInfluence
+      this._bullets.forEachAlive((bullet: Phaser.Sprite) => {
+        const planetGravity = planet.calculateGravityForce(bullet.position)
+        bullet.body.force.x += 5 * planetGravity.x
+        bullet.body.force.y += 5 * planetGravity.y
+      })
     }
+
+    this._bullets.forEachAlive((bullet: Phaser.Sprite) => bullet.alpha *= 0.985 )
 
     // this._spaceShuttleTrail.refresh(this._spaceShuttle.position)
   }

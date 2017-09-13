@@ -30,6 +30,8 @@ function startApp(): void {
   let gameWidth: number = window.innerWidth
   let gameHeight: number = window.innerHeight
 
+  document.addEventListener('contextmenu', event => event.preventDefault())
+
   if (SCALE_MODE === 'USER_SCALE') {
     let screenMetrics: Utils.ScreenMetrics = Utils.ScreenUtils.calculateScreenMetrics(gameWidth, gameHeight)
 

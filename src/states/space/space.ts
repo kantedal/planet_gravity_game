@@ -34,6 +34,7 @@ export default class Space extends Phaser.State {
   public create(): void {
     this.game.world.setBounds(0, 0, 2000, 2000)
     this.physics.startSystem(Phaser.Physics.P2JS)
+    this.physics.startSystem(Phaser.Physics.ARCADE)
 
     this._spaceGroup = new Phaser.Group(this.game)
 
@@ -81,8 +82,8 @@ export default class Space extends Phaser.State {
     this._spaceShader = new Phaser.Filter(this.game, this._spaceShaderUniforms, shader)
     this.game.world.filters = [this._spaceShader]
 
-    this._foregroundLayer1 = new Foreground(this.game, 1.1, 0.75)
-    this._foregroundLayer2 = new Foreground(this.game, 1.3, 0.5)
+    this._foregroundLayer1 = new Foreground(this.game, 1.1, 0.6)
+    this._foregroundLayer2 = new Foreground(this.game, 1.3, 0.4)
     this.game.add.existing(this._foregroundLayer1)
     this.game.add.existing(this._foregroundLayer2)
 
