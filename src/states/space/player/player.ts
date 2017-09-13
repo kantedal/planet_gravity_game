@@ -31,7 +31,7 @@ export default class Player extends Phaser.Group {
     this._spaceShuttle.height = 25
     this._spaceShuttle.anchor.set(0.5, 1.0)
     this.game.physics.p2.enable(this._spaceShuttle)
-    this._spaceShuttle.body.damping = 0.5
+    this._spaceShuttle.body.damping = 0.4
 
     this._lastPosition = new Phaser.Point(300, 300)
 
@@ -83,7 +83,7 @@ export default class Player extends Phaser.Group {
     this._lastPosition.set(this._spaceShuttle.position.x, this._spaceShuttle.position.y)
 
     const accelerationSpeed = 600
-    const speed = 200
+    const speed = 350
 
     const angle = Math.atan2(this._crosshair.y - this._spaceShuttle.y, this._crosshair.x - this._spaceShuttle.x)
     const moveDirection = new Phaser.Point(Math.cos(angle), Math.sin(angle))

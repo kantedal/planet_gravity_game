@@ -9,6 +9,7 @@ uniform sampler2D uSampler;
 uniform vec2 resolution;
 uniform vec3 planetPosition;
 uniform float planetSize;
+uniform vec3 planetColor;
 uniform vec3 sunPosition;
 uniform vec3 cameraPosition;
 uniform vec2 screenSize;
@@ -36,7 +37,7 @@ void main(void) {
   float glowSize = 0.1;
 
   vec4 transparent = vec4(0, 0, 0, 0);
-  vec3 planetColor = vec3(0.4, 0.4, 0.4) * (1.0 - 0.2 * abs(noise(uv * 24.0)));
+  vec3 planetColor = (vec3(0.4, 0.4, 0.4) + 0.05 * planetColor) * (1.0 - 0.2 * abs(noise(uv * 24.0)));
 
   vec3 normal = normalize(vec3(vec2(0.5) - uv, -(1.0 - 2.0 * centerDistance)) * 0.75);
   vec3 position = planetPosition + vec3(uv.x * planetSize, uv.y * planetSize, planetSize * 0.5 * (1.0 - length(abs(normal.xy))));

@@ -21,7 +21,6 @@ export default class Space extends Phaser.State {
   private _skyLayer2: SkyLayer
   private _sun: Sun
   private _planets: Planet[]
-  private _planetGlow: PlanetGlow[]
   private _foregroundLayer1: Foreground
   private _foregroundLayer2: Foreground
 
@@ -49,21 +48,11 @@ export default class Space extends Phaser.State {
     this._sun = new Sun(this.game, 200, 0, 100)
     // this._spaceGroup.add(this._sun)
 
-    this._planetGlow = []
     this._planets = []
 
-    this._planetGlow.push(new PlanetGlow(this.game, 400, 700, 280))
     this._planets.push(new Planet(this.game, 400, 700, 200))
-
-    this._planetGlow.push(new PlanetGlow(this.game, 600, 200, 230))
     this._planets.push(new Planet(this.game, 600, 200, 150))
-
-    this._planetGlow.push(new PlanetGlow(this.game, 1000, 1000, 350))
     this._planets.push(new Planet(this.game, 1000, 1000, 270))
-
-    for (const planetGlow of this._planetGlow) {
-      this.game.add.existing(planetGlow)
-    }
 
     for (const planet of this._planets) {
       this.game.add.existing(planet)
@@ -110,10 +99,6 @@ export default class Space extends Phaser.State {
 
     for (const planet of this._planets) {
       planet.refresh(this._sun.position)
-    }
-
-    for (const planetGlow of this._planetGlow) {
-      planetGlow.refresh(this._sun.position)
     }
 
     this._skyBackground.refresh(new Phaser.Point(this._sun.position.x, this._sun.position.y))

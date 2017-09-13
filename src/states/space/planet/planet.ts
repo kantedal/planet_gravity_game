@@ -1,9 +1,11 @@
 import * as Assets from '../../../assets'
+import PlanetGlow from './planet-glow'
 const glsl = require('glslify')
 const shader = require('raw-loader!glslify!./planetShader.frag')
 
 interface IPlanetUniforms {
   planetPosition: any
+  planetColor: any
   planetSize: any
   sunPosition: any
   cameraPosition: any
@@ -11,9 +13,9 @@ interface IPlanetUniforms {
 }
 
 export default class Planet extends Phaser.Sprite {
-
   private _radius: number
   private _planetPosition: Phaser.Point
+  private _planetGlow: PlanetGlow
   private _shader: Phaser.Filter
   private _uniforms: IPlanetUniforms
 
@@ -28,6 +30,7 @@ export default class Planet extends Phaser.Sprite {
 
     this._uniforms = {
       planetPosition: { type: '3f', value: {x, y: this.game.height - y, z: 0.0 } },
+      planetColor: { type: '3f', value: { x: 2.0 * (Math.random() - 0.5), y: 2.0 * (Math.random() - 0.5), z: 2.0 * (Math.random() - 0.5) }},
       planetSize: { type: '1f', value: radius },
       sunPosition: { type: '3f', value: { x: 200.0, y: this.game.height - this.game.height, z: 0.0 } },
       cameraPosition: { type: '3f', value: { x: this.game.camera.x, y: this.game.camera.y, z: 500 }},
@@ -38,25 +41,28 @@ export default class Planet extends Phaser.Sprite {
     this._shader.setResolution(this.game.width, this.game.height)
     this.filters = [ this._shader ]
 
+    this._planetGlow = new PlanetGlow(this.game, x, y, radius + 80)
+    this.game.add.existing(this._planetGlow)
 
-    const collisionBall = this.game.add.sprite(x, y)
-    collisionBall.width = radius
-    collisionBall.height = radius
-    this.game.physics.p2.enable([collisionBall])
-    collisionBall.body.setCircle(radius / 2.0)
-    collisionBall.body.kinematic = true
+    const collisionSphere = this.game.add.sprite(x, y)
+    collisionSphere.width = radius
+    collisionSphere.height = radius
+    this.game.physics.p2.enable([collisionSphere])
+    collisionSphere.body.setCircle(radius / 2.0)
+    collisionSphere.body.kinematic = true
     // collisionBall.body.damping = 0.1
   }
 
   public refresh(sunPosition: Phaser.Point) {
     this._uniforms.sunPosition.value = { x: sunPosition.x, y: sunPosition.y, z: -100.0 }
     this._uniforms.cameraPosition.value = { x: this.game.camera.x, y: this.game.camera.y, z: 500.0 }
+    this._planetGlow.refresh(sunPosition)
     this._shader.syncUniforms()
   }
 
   public calculateGravityForce(point: Phaser.Point) {
-    const maxPlanetAttraction = 500
-    const maxDistanceFromPlanet = 200
+    const maxPlanetAttraction = 600
+    const maxDistanceFromPlanet = 150
 
     const distanceToPlanet = Phaser.Point.distance(point, this.planetPosition) - this._radius
     const angle = Math.atan2(this.planetPosition.y - point.y, this.planetPosition.x - point.x)
