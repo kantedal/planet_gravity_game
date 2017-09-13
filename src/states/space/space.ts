@@ -1,9 +1,10 @@
+import SkyLayer from './sky-layer/sky-layer'
 const shader = require('raw-loader!glslify!./spaceShader.frag')
 
 import Planet from './planet/planet'
 import PlanetGlow from './planet/planet-glow'
 import Sun from './sun/sun'
-import Sky from './sky/sky'
+import Sky from './sky-background/sky'
 import Player from './player/player'
 
 interface ISpaceUniforms {
@@ -14,7 +15,9 @@ interface ISpaceUniforms {
 
 export default class Space extends Phaser.State {
   private _player: Player
-  private _sky: Sky
+  private _skyBackground: Sky
+  private _skyLayer1: SkyLayer
+  private _skyLayer2: SkyLayer
   private _sun: Sun
   private _planets: Planet[]
   private _planetGlow: PlanetGlow[]
@@ -31,9 +34,13 @@ export default class Space extends Phaser.State {
 
     this._spaceGroup = new Phaser.Group(this.game)
 
-    this._sky = new Sky(this.game)
-    // this._spaceGroup.add(this._sky)
-    this.game.add.existing(this._sky)
+    this._skyBackground = new Sky(this.game)
+    this.game.add.existing(this._skyBackground)
+
+    this._skyLayer1 = new SkyLayer(this.game, 0.8, 75)
+    this._skyLayer2 = new SkyLayer(this.game, 0.9, 50)
+    this.game.add.existing(this._skyLayer1)
+    this.game.add.existing(this._skyLayer2)
 
     this._sun = new Sun(this.game, 200, 0, 100)
     // this._spaceGroup.add(this._sun)
@@ -41,8 +48,8 @@ export default class Space extends Phaser.State {
     this._planetGlow = []
     this._planets = []
 
-    this._planetGlow.push(new PlanetGlow(this.game, 140, 200, 230))
-    this._planets.push(new Planet(this.game, 140, 200, 200))
+    this._planetGlow.push(new PlanetGlow(this.game, 400, 700, 230))
+    this._planets.push(new Planet(this.game, 400, 700, 200))
 
     this._planetGlow.push(new PlanetGlow(this.game, 600, 200, 180))
     this._planets.push(new Planet(this.game, 600, 200, 150))
@@ -103,7 +110,9 @@ export default class Space extends Phaser.State {
       planetGlow.refresh(this._sun.position)
     }
 
-    this._sky.refresh(new Phaser.Point(this._sun.position.x, this._sun.position.y))
+    this._skyBackground.refresh(new Phaser.Point(this._sun.position.x, this._sun.position.y))
+    this._skyLayer1.refresh(new Phaser.Point(this._sun.position.x, this._sun.position.y))
+    this._skyLayer2.refresh(new Phaser.Point(this._sun.position.x, this._sun.position.y))
 
     this._spaceShaderUniforms.time.value = this.game.time.time / 10000
     this._spaceShaderUniforms.grainRand.value = { x: 2.0 * (Math.random() - 0.5), y: 2.0 * (Math.random() - 0.5) }
