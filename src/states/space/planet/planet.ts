@@ -45,7 +45,7 @@ export default class Planet extends Phaser.Sprite {
     this.game.physics.p2.enable([collisionBall])
     collisionBall.body.setCircle(radius / 2.0)
     collisionBall.body.kinematic = true
-    collisionBall.body.damping = 1.0
+    // collisionBall.body.damping = 0.1
   }
 
   public refresh(sunPosition: Phaser.Point) {

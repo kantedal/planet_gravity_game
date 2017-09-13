@@ -51,13 +51,13 @@ export default class Space extends Phaser.State {
     this._planetGlow = []
     this._planets = []
 
-    this._planetGlow.push(new PlanetGlow(this.game, 400, 700, 230))
+    this._planetGlow.push(new PlanetGlow(this.game, 400, 700, 280))
     this._planets.push(new Planet(this.game, 400, 700, 200))
 
-    this._planetGlow.push(new PlanetGlow(this.game, 600, 200, 180))
+    this._planetGlow.push(new PlanetGlow(this.game, 600, 200, 230))
     this._planets.push(new Planet(this.game, 600, 200, 150))
 
-    this._planetGlow.push(new PlanetGlow(this.game, 1000, 1000, 300))
+    this._planetGlow.push(new PlanetGlow(this.game, 1000, 1000, 350))
     this._planets.push(new Planet(this.game, 1000, 1000, 270))
 
     for (const planetGlow of this._planetGlow) {

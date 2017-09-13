@@ -2,6 +2,8 @@ precision highp float;
 
 #define GLSLIFY 1
 
+#pragma glslify: noise2d = require("glsl-noise/simplex/2d")
+
 varying vec2 vTextureCoord;
 
 uniform sampler2D uSampler;
@@ -19,7 +21,7 @@ void main(void) {
 
   vec2 uv = (vTextureCoord + cameraPosTexCoord - planetPosTexCoord) / vec2(planetSize / screenSize.x, planetSize / screenSize.y);
   float centerDistance = distance(uv, vec2(0.5, 0.5));
-  float glowSize = 0.1;
+  float glowSize = 0.2;
 
 
   vec3 sunVector = normalize(sunPosition - planetPosition);
@@ -29,7 +31,7 @@ void main(void) {
   vec3 normal = -normalize(vec3(vec2(0.5) - uv, -(1.0 - 2.0 * centerDistance)) * 0.75);
 
   vec4 transparent = vec4(0, 0, 0, 0);
-  vec4 glowColor = vec4(0.1, 0.1, 0.1, 0.5) * 1.25 * clamp(dot(normal, sunVector), 0.2, 1.0) * sunDistanceFactor;
+  vec4 glowColor = vec4(vec3(0.075), 0.5) * 1.25 * clamp(dot(normal, sunVector), 0.2, 1.0);
 
   // Draw planet
   if (centerDistance < 0.5 - glowSize) {
@@ -38,8 +40,10 @@ void main(void) {
   }
   // Interpolate planet border
   else if (centerDistance < 0.5) {
-    float interpolateFactor = (0.5 - centerDistance) / glowSize;
-    gl_FragColor = glowColor * interpolateFactor + transparent * (1.0 - interpolateFactor);
+    float t = (0.5 - centerDistance) / glowSize;
+    t = t * t * (3.0 - 2.0 * t);
+    gl_FragColor = glowColor * t + transparent * (1.0 - t);
+    gl_FragColor += mix(-0.5/255.0, 0.5/255.0, noise2d(vTextureCoord * 400.0));
     return;
   }
 //  // Draw glow

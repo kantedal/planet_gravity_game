@@ -9,6 +9,7 @@ interface IForegroundUniforms {
 }
 
 export default class Foreground extends Phaser.Sprite {
+  private _startTime: number
   private _shader: Phaser.Filter
   private _uniforms: IForegroundUniforms
 
@@ -17,6 +18,8 @@ export default class Foreground extends Phaser.Sprite {
     this.width = game.width
     this.height = game.height
     this.fixedToCamera = true
+
+    this._startTime = this.game.time.time / 50000
 
     this._uniforms = {
       screenSize: { type: '2f', value: { x: game.width, y: game.height } },
@@ -39,7 +42,7 @@ export default class Foreground extends Phaser.Sprite {
 
   public refresh() {
     this._uniforms.cameraPosition.value = { x: this.game.camera.x * this._parallaxFactor, y: this.game.camera.y * this._parallaxFactor }
-    this._uniforms.time.value = this.game.time.time / 60000 - 25088796
+    this._uniforms.time.value = this.game.time.time / 50000 - this._startTime
     this._shader.syncUniforms()
   }
 }
