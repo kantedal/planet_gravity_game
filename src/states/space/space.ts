@@ -6,6 +6,7 @@ import PlanetGlow from './planet/planet-glow'
 import Sun from './sun/sun'
 import Sky from './sky-background/sky'
 import Player from './player/player'
+import Foreground from './foreground/foreground'
 
 interface ISpaceUniforms {
   screenSize: any
@@ -21,6 +22,8 @@ export default class Space extends Phaser.State {
   private _sun: Sun
   private _planets: Planet[]
   private _planetGlow: PlanetGlow[]
+  private _foregroundLayer1: Foreground
+  private _foregroundLayer2: Foreground
 
   private _spaceGroup: Phaser.Group
   private _spaceShader: Phaser.Filter
@@ -58,17 +61,14 @@ export default class Space extends Phaser.State {
     this._planets.push(new Planet(this.game, 1000, 1000, 270))
 
     for (const planetGlow of this._planetGlow) {
-      // this._spaceGroup.add(planetGlow)
       this.game.add.existing(planetGlow)
     }
 
     for (const planet of this._planets) {
-      // this._spaceGroup.add(planet)
       this.game.add.existing(planet)
     }
 
     this._player = new Player(this.game, this._planets)
-    // this._spaceGroup.add(this._player)
     this.game.add.existing(this._player)
 
     this.game.camera.flash(0x000000, 1000)
@@ -80,6 +80,11 @@ export default class Space extends Phaser.State {
     }
     this._spaceShader = new Phaser.Filter(this.game, this._spaceShaderUniforms, shader)
     this.game.world.filters = [this._spaceShader]
+
+    this._foregroundLayer1 = new Foreground(this.game, 1.1, 0.75)
+    this._foregroundLayer2 = new Foreground(this.game, 1.3, 0.5)
+    this.game.add.existing(this._foregroundLayer1)
+    this.game.add.existing(this._foregroundLayer2)
 
     // this._renderTexture = this.game.add.renderTexture(this.game.width, this.game.height, 'texture1')
     // this._outputSprite = this.game.add.sprite(0, 0)
@@ -113,8 +118,10 @@ export default class Space extends Phaser.State {
     this._skyBackground.refresh(new Phaser.Point(this._sun.position.x, this._sun.position.y))
     this._skyLayer1.refresh(new Phaser.Point(this._sun.position.x, this._sun.position.y))
     this._skyLayer2.refresh(new Phaser.Point(this._sun.position.x, this._sun.position.y))
+    this._foregroundLayer1.refresh()
+    this._foregroundLayer2.refresh()
 
-    this._spaceShaderUniforms.time.value = this.game.time.time / 10000
+    this._spaceShaderUniforms.time.value = this.game.time.time / 10000 - 150532758
     this._spaceShaderUniforms.grainRand.value = { x: 2.0 * (Math.random() - 0.5), y: 2.0 * (Math.random() - 0.5) }
     this._spaceShader.syncUniforms()
 
