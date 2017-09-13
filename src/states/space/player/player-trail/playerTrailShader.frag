@@ -25,5 +25,5 @@ void main(void) {
   }
 
   gl_FragColor = texColor;
-  //gl_FragColor = vec4(vTextureCoord, 0.0, 1.0);
+  // gl_FragColor += vec4(vTextureCoord, 0.0, 0.0);
 }

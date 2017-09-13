@@ -11,14 +11,20 @@ interface IPlanetUniforms {
 }
 
 export default class Planet extends Phaser.Sprite {
+
+  private _radius: number
+  private _planetPosition: Phaser.Point
   private _shader: Phaser.Filter
   private _uniforms: IPlanetUniforms
 
   constructor(game: Phaser.Game, x: number, y: number, radius: number) {
-    super(game, 0, 0, Assets.Images.ImagesBackgroundTemplate.getName())
+    super(game, 0, 0)
     this.width = this.game.width
     this.height = this.game.height
     // this.anchor.set(0.5, 0.5)
+
+    this._radius = radius / 2.0
+    this._planetPosition = new Phaser.Point(x, y)
 
     this._uniforms = {
       planetPosition: { type: '3f', value: {x, y: this.game.height - y, z: 0.0 } },
@@ -31,6 +37,15 @@ export default class Planet extends Phaser.Sprite {
     this._shader = new Phaser.Filter(this.game, this._uniforms, shader)
     this._shader.setResolution(this.game.width, this.game.height)
     this.filters = [ this._shader ]
+
+
+    const collisionBall = this.game.add.sprite(x, y)
+    collisionBall.width = radius
+    collisionBall.height = radius
+    this.game.physics.p2.enable([collisionBall])
+    collisionBall.body.setCircle(radius / 2.0)
+    collisionBall.body.kinematic = true
+    collisionBall.body.damping = 1.0
   }
 
   public refresh(sunPosition: Phaser.Point) {
@@ -38,4 +53,7 @@ export default class Planet extends Phaser.Sprite {
     this._uniforms.cameraPosition.value = { x: this.game.camera.x, y: this.game.camera.y, z: 500.0 }
     this._shader.syncUniforms()
   }
+
+  get radius(): number { return this._radius }
+  get planetPosition(): Phaser.Point { return this._planetPosition }
 }

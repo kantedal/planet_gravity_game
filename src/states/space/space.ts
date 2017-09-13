@@ -1,6 +1,5 @@
 const shader = require('raw-loader!glslify!./spaceShader.frag')
 
-import * as Assets from '../../assets'
 import Planet from './planet/planet'
 import PlanetGlow from './planet/planet-glow'
 import Sun from './sun/sun'
@@ -27,15 +26,14 @@ export default class Space extends Phaser.State {
   private _outputSprite: Phaser.Sprite
 
   public create(): void {
-    // this.camera.bounds.setTo(0, 0, 2000, 2000)
     this.game.world.setBounds(0, 0, 2000, 2000)
-    // this.physics.startSystem(Phaser.Physics.ARCADE)
     this.physics.startSystem(Phaser.Physics.P2JS)
 
     this._spaceGroup = new Phaser.Group(this.game)
 
     this._sky = new Sky(this.game)
-    this._spaceGroup.add(this._sky)
+    // this._spaceGroup.add(this._sky)
+    this.game.add.existing(this._sky)
 
     this._sun = new Sun(this.game, 200, 0, 100)
     // this._spaceGroup.add(this._sun)
@@ -53,21 +51,20 @@ export default class Space extends Phaser.State {
     this._planets.push(new Planet(this.game, 1000, 1000, 270))
 
     for (const planetGlow of this._planetGlow) {
-      this._spaceGroup.add(planetGlow)
+      // this._spaceGroup.add(planetGlow)
+      this.game.add.existing(planetGlow)
     }
 
     for (const planet of this._planets) {
-      this._spaceGroup.add(planet)
+      // this._spaceGroup.add(planet)
+      this.game.add.existing(planet)
     }
 
-    this._player = new Player(this.game)
-    this._spaceGroup.add(this._player)
+    this._player = new Player(this.game, this._planets)
+    // this._spaceGroup.add(this._player)
+    this.game.add.existing(this._player)
 
     this.game.camera.flash(0x000000, 1000)
-
-    // this._renderTexture = this.game.add.renderTexture(this.game.width, this.game.height, 'texture1')
-    // this._outputSprite = this.game.add.sprite(0, 0)
-    // this._outputSprite.fixedToCamera = true
 
     this._spaceShaderUniforms = {
       screenSize: { type: '2f', value: { x: this.game.width, y: this.game.height }},
@@ -75,7 +72,14 @@ export default class Space extends Phaser.State {
       grainRand: { type: '2f', value: { x: 2.0 * (Math.random() - 0.5), y: 2.0 * (Math.random() - 0.5) }},
     }
     this._spaceShader = new Phaser.Filter(this.game, this._spaceShaderUniforms, shader)
+    this.game.world.filters = [this._spaceShader]
+
+    // this._renderTexture = this.game.add.renderTexture(this.game.width, this.game.height, 'texture1')
+    // this._outputSprite = this.game.add.sprite(0, 0)
+    // this._outputSprite.fixedToCamera = true
     // this._outputSprite.filters = [ this._spaceShader ]
+
+    // this.game.add.existing(this._spaceShader)
 
     // this.game.add.existing(this._player)
 
@@ -106,8 +110,9 @@ export default class Space extends Phaser.State {
     this._spaceShader.syncUniforms()
 
     if (this._renderTexture) {
-      this._renderTexture.renderXY(this._spaceGroup, 0, 0, true)
+      this._renderTexture.renderXY(this.game.world, this.camera.x, this.camera.y, true)
       this._outputSprite.setTexture(this._renderTexture)
+      this._outputSprite.position.set(-this.camera.x, -this.camera.y)
     }
 
   }
