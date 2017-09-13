@@ -23,8 +23,8 @@ export default class Player extends Phaser.Group {
     super(game)
 
     this._spaceShuttle = new Phaser.Sprite(this.game, 300, 300, Assets.Images.ImagesSpaceShuttle.getName())
-    this._spaceShuttle.width = 15
-    this._spaceShuttle.height = 15
+    this._spaceShuttle.width = 25
+    this._spaceShuttle.height = 25
     this._spaceShuttle.anchor.set(0.5, 1.0)
     this.game.physics.p2.enable(this._spaceShuttle)
     this._spaceShuttle.body.damping = 0.5
@@ -42,8 +42,8 @@ export default class Player extends Phaser.Group {
 
     this._crosshair = new Phaser.Sprite(this.game, 100, 100, Assets.Images.ImagesCrosshair.getName())
     // this._crosshair.fixedToCamera = true
-    this._crosshair.width = 30
-    this._crosshair.height = 30
+    this._crosshair.width = 50
+    this._crosshair.height = 50
     this._crosshair.alpha = 0.35
     this._crosshair.angle = 45
     this._crosshair.anchor.setTo(0.5, 0.5)

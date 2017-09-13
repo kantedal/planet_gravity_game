@@ -35,7 +35,7 @@ export default class Sky extends Phaser.Sprite {
 
   public refresh(sunPosition: Phaser.Point) {
     this._uniforms.sunPosition.value = { x: sunPosition.x, y: sunPosition.y, z: -100.0 }
-    this._uniforms.cameraPosition.value = { x: this.game.camera.x * 1.0, y: this.game.camera.y * 1.0 }
+    this._uniforms.cameraPosition.value = { x: this.game.camera.x * 0.75, y: this.game.camera.y * 0.75 }
     this._shader.syncUniforms()
   }
 }
