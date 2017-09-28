@@ -90,8 +90,8 @@ export default class Player extends Phaser.Group {
 
     // Accelerate
     if (this.game.input.activePointer.rightButton.isDown) {
-      this._spaceShuttle.body.force.x = moveDirection.x * accelerationSpeed
-      this._spaceShuttle.body.force.y = moveDirection.y * accelerationSpeed
+      this._spaceShuttle.body.force.x += moveDirection.x * accelerationSpeed
+      this._spaceShuttle.body.force.y += moveDirection.y * accelerationSpeed
     }
     else {
       this._spaceShuttle.body.force.x = moveDirection.x * speed
