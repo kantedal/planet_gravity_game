@@ -5,7 +5,8 @@
     "sourceMap": true,
     "types": [
       "node",
-      "victor"
+      "victor",
+      "socket.io-client"
     ],
     "lib": [
       "dom",
@@ -18,3 +19,4 @@
     "./node_modules/phaser-ce/typescript/phaser.comments.d.ts"
   ]
 }
+

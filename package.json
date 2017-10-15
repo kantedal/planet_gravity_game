@@ -42,7 +42,7 @@
     "file-loader": "0.11.2",
     "html-webpack-plugin": "2.29.0",
     "npm-check": "5.4.5",
-    "phaser-ce": "2.8.3np",
+    "phaser-ce": "2.9.1",
     "pngjs-image": "0.11.7",
     "shelljs": "0.7.8",
     "ts-loader": "2.3.2",
@@ -56,6 +56,7 @@
     "xml2js": "0.4.17"
   },
   "dependencies": {
+    "@types/socket.io-client": "^1.4.31",
     "@types/victor": "^1.1.0",
     "glsl-blend-soft-light": "^1.0.5",
     "glsl-film-grain": "^1.0.4",
@@ -65,6 +66,8 @@
     "glslify": "^6.1.0",
     "glslify-loader": "^1.0.2",
     "raw-loader": "^0.5.1",
+    "shortid": "^2.2.8",
+    "socket.io-client": "^2.0.3",
     "victor": "^1.1.0"
   }
 }
