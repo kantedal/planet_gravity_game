@@ -46,7 +46,7 @@ void main(void) {
   float sunDistance = distance(vec3(sunPosition.xy, 2.0), planetPosition);
 
 
-  vec3 ka = planetColor * 0.2;
+  vec3 ka = planetColor * 0.45;
   vec3 kd = planetColor * 1.0;
   vec3 ks = vec3(0.2);
 

@@ -31,7 +31,7 @@ export default class Space extends Phaser.State {
   private _outputSprite: Phaser.Sprite
 
   public create(): void {
-    this.game.world.setBounds(0, 0, 2000, 2000)
+    this.game.world.setBounds(0, 0, 1200, 1200)
     this.physics.startSystem(Phaser.Physics.P2JS)
     this.physics.startSystem(Phaser.Physics.ARCADE)
 
@@ -46,13 +46,17 @@ export default class Space extends Phaser.State {
     this.game.add.existing(this._skyLayer2)
 
     this._sun = new Sun(this.game, 200, 0, 100)
-    // this._spaceGroup.add(this._sun)
+    this.game.add.existing(this._sun)
 
     this._planets = []
 
     this._planets.push(new Planet(this.game, 400, 700, 200))
     this._planets.push(new Planet(this.game, 600, 200, 150))
     this._planets.push(new Planet(this.game, 1000, 1000, 270))
+    this._planets.push(new Planet(this.game, 1000, 300, 200))
+    // this._planets.push(new Planet(this.game, 1800, 300, 200))
+    // this._planets.push(new Planet(this.game, 1700, 1700, 220))
+    // this._planets.push(new Planet(this.game, 1500, 700, 300))
 
     for (const planet of this._planets) {
       this.game.add.existing(planet)

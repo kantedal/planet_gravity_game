@@ -13,6 +13,7 @@ export default class Player extends Phaser.Group {
   private _spaceShuttle: Phaser.Sprite
   private _spaceShuttleTrail: PlayerTrail
   private _crosshair: Phaser.Sprite
+  private _gravityArrow: Phaser.Sprite
 
   private _shader: Phaser.Filter
   private _uniforms: ISkyUniforms
@@ -31,7 +32,7 @@ export default class Player extends Phaser.Group {
     this._spaceShuttle.height = 25
     this._spaceShuttle.anchor.set(0.5, 1.0)
     this.game.physics.p2.enable(this._spaceShuttle)
-    this._spaceShuttle.body.damping = 0.4
+    this._spaceShuttle.body.damping = 0.5
 
     this._lastPosition = new Phaser.Point(300, 300)
 
@@ -44,13 +45,19 @@ export default class Player extends Phaser.Group {
     this.game.add.existing(this._spaceShuttle)
 
     this._crosshair = new Phaser.Sprite(this.game, 100, 100, Assets.Images.ImagesCrosshair.getName())
-    // this._crosshair.fixedToCamera = true
     this._crosshair.width = 50
     this._crosshair.height = 50
     this._crosshair.alpha = 0.35
     this._crosshair.angle = 45
     this._crosshair.anchor.setTo(0.5, 0.5)
     this.game.add.existing(this._crosshair)
+
+    this._gravityArrow = new Phaser.Sprite(this.game, 32, 32, Assets.Images.ImagesArrow.getName())
+    this._gravityArrow.width = 32
+    this._gravityArrow.height = 32
+    this._gravityArrow.alpha = 0.4
+    this._gravityArrow.anchor.setTo(0.5, 0.0)
+    this._spaceShuttle.addChild(this._gravityArrow)
 
     // this._spaceShuttle.addChildAt(this._spaceShuttleTrail, 0)
     // this.add(this._spaceShuttleTrail)
@@ -82,16 +89,19 @@ export default class Player extends Phaser.Group {
 
     this._lastPosition.set(this._spaceShuttle.position.x, this._spaceShuttle.position.y)
 
-    const accelerationSpeed = 600
-    const speed = 350
+    const accelerationSpeed = 300
+    const speed = 50
 
     const angle = Math.atan2(this._crosshair.y - this._spaceShuttle.y, this._crosshair.x - this._spaceShuttle.x)
     const moveDirection = new Phaser.Point(Math.cos(angle), Math.sin(angle))
 
     // Accelerate
-    if (this.game.input.activePointer.rightButton.isDown) {
-      this._spaceShuttle.body.force.x += moveDirection.x * accelerationSpeed
-      this._spaceShuttle.body.force.y += moveDirection.y * accelerationSpeed
+    if (this.game.input.activePointer.leftButton.isDown) {
+      this._spaceShuttle.body.force.x += moveDirection.x * 100
+      this._spaceShuttle.body.force.y += moveDirection.y * 100
+
+      this._spaceShuttle.body.velocity.x += moveDirection.x * 5.0
+      this._spaceShuttle.body.velocity.y += moveDirection.y * 5.0
     }
     else {
       this._spaceShuttle.body.force.x = moveDirection.x * speed
@@ -99,12 +109,11 @@ export default class Player extends Phaser.Group {
     }
 
     // Shoot
-    if (this.game.input.activePointer.leftButton.isDown) {
-      console.log('SHOOOT')
+    if (this.game.input.keyboard.addKey(32).isDown) {
       if (this.game.time.now > this._nextFire && this._bullets.countDead() > 0) {
         this._nextFire = this.game.time.now + this._fireRate
         const bullet = this._bullets.getFirstDead()
-        const bulletDirection = velocity.clone().normalize()
+        const bulletDirection = this._crosshair.position.clone().subtract(this._spaceShuttle.position.x, this._spaceShuttle.position.y).normalize() // velocity.clone().normalize()
 
         bullet.reset(this._spaceShuttle.x + bulletDirection.x * 20, this._spaceShuttle.y + bulletDirection.y * 20)
         bullet.body.velocity.x = bulletDirection.x * 400
@@ -121,8 +130,8 @@ export default class Player extends Phaser.Group {
 
       this._bullets.forEachAlive((bullet: Phaser.Sprite) => {
         const planetGravity = planet.calculateGravityForce(bullet.position)
-        bullet.body.force.x += 5 * planetGravity.x
-        bullet.body.force.y += 5 * planetGravity.y
+        bullet.body.force.x += 3.0 * planetGravity.x
+        bullet.body.force.y += 3.0 * planetGravity.y
       })
     }
 
