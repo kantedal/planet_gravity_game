@@ -90,7 +90,6 @@ export default class Player extends Phaser.Group {
       })
     })
 
-
     this.game.input.mouse.capture = true
     this.game.input.mspointer.stop()
   }
@@ -104,30 +103,26 @@ export default class Player extends Phaser.Group {
     const moveAngle = Math.atan2(this._velocity.y, this._velocity.x)
     this._spaceShuttle.body.rotation = moveAngle + Math.PI / 2.0
 
-
     this._lastPosition.set(this._spaceShuttle.position.x, this._spaceShuttle.position.y)
-
-    const accelerationSpeed = 300
-    const speed = 50
 
     const angle = Math.atan2(this._crosshair.y - this._spaceShuttle.y, this._crosshair.x - this._spaceShuttle.x)
     const moveDirection = new Phaser.Point(Math.cos(angle), Math.sin(angle))
 
     // Accelerate
-    if (this.game.input.activePointer.leftButton.isDown) {
+    if (this.game.input.activePointer.leftButton.isDown && this._fuel !== 0) {
       this._spaceShuttle.body.force.x += moveDirection.x * 150
       this._spaceShuttle.body.force.y += moveDirection.y * 150
 
       this._spaceShuttle.body.velocity.x += moveDirection.x * 5.0
       this._spaceShuttle.body.velocity.y += moveDirection.y * 5.0
 
-      this._fuel -= 0.1
+      this._fuel -= 0.2
     }
     else {
-      this._spaceShuttle.body.force.x = moveDirection.x * speed
-      this._spaceShuttle.body.force.y = moveDirection.y * speed
+      this._spaceShuttle.body.force.x = moveDirection.x * 150
+      this._spaceShuttle.body.force.y = moveDirection.y * 150
 
-      this._fuel += 0.05
+      this._fuel += 0.1
     }
 
     this._fuel = Math.max(0, Math.min(this._fuel, 100))
@@ -178,6 +173,7 @@ export default class Player extends Phaser.Group {
   get spaceShuttle() { return this._spaceShuttle }
   get velocity() { return this._velocity }
   get fuel() { return this._fuel }
+  set fuel(fuel: number) { this._fuel = fuel }
   get bulletsData() { return this._bulletsData }
   get aliveBulletsCount(): number { return this._aliveBulletsCount }
   get totalBulletsCount(): number { return this._totalBulletsCount }

@@ -11,6 +11,7 @@ import * as Utils from './utils/utils'
 import * as Assets from './assets'
 import PhysicsTest from './states/physics-test'
 import Space from './states/space/space'
+import Gameover from './states/gameover'
 
 class App extends Phaser.Game {
   constructor(config: Phaser.IGameConfig) {
@@ -21,6 +22,7 @@ class App extends Phaser.Game {
     this.state.add('title', Title)
     this.state.add('physicsTest', PhysicsTest)
     this.state.add('space', Space)
+    this.state.add('gameover', Gameover)
 
     this.state.start('boot')
   }

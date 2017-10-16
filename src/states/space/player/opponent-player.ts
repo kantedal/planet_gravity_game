@@ -29,11 +29,9 @@ export default class OpponentPlayer extends Phaser.Group {
       bullet.alpha = 1.0
       bullet.anchor.set(0.5)
       // bullet.body.static = true
-      bullet.position.set(Math.random() * this.game.width, Math.random() * this.game.height)
-      bullet.reset(Math.random() * this.game.width, Math.random() * this.game.height)
-      console.log('bullet')
+      bullet.position.set(0, 0)
+      bullet.reset(0, 0)
     })
-    console.log('init opponent')
   }
 
   public refresh(playerData: IPlayerData) {

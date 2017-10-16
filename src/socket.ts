@@ -5,6 +5,13 @@ export interface INetworkListener {
   playerConnected: (player: IPlayerData) => void
   playerDisconnected: (playerId: string) => void
   updatePlayers: (players: { [playerId: string]: IPlayerData }) => void
+  setupGame: (gameSetup: IGameSetup) => void
+  updateGame: (gameSetup: IGameSetup) => void
+}
+
+export interface IGameSetup {
+  planets: { [planetId: string]: any }
+  fuelTanks: { [fuelTankId: string]: any }
 }
 
 export interface IPlayerData {
@@ -49,18 +56,28 @@ export default class Socket {
     this._server.on('updatePlayers', (playersData) => this._networkListener.updatePlayers(playersData))
     this._server.on('playerDisconnected', (playerId) => this._networkListener.playerDisconnected(playerId))
     this._server.on('playerConnected', (playerData) => this._networkListener.playerConnected(playerData))
-    this._server.on('initPlayers', (playersData) => {
-      console.log('init players', playersData)
-      for (const playerId in playersData) {
-        this._networkListener.playerConnected(playersData[playerId])
+    this._server.on('init', (gameData) => {
+      console.log('init game', gameData)
+      this._networkListener.setupGame(gameData.gameSetup)
+      for (const playerId in gameData.players) {
+        this._networkListener.playerConnected(gameData.players[playerId])
       }
     })
+    this._server.on('updateGame', (gameSetup: IGameSetup) => this._networkListener.updateGame(gameSetup))
   }
 
   updatePlayerData(playerData: IPlayerData) {
     if (this._isConnected) {
       this._server.emit('updatePlayerData', playerData)
     }
+  }
+
+  fuelTankTaken(fuelTankId: string) {
+    this._server.emit('fuelTaken', fuelTankId)
+  }
+
+  disconnect() {
+    this._server.disconnect()
   }
 
   get playerId() { return this._playerId }

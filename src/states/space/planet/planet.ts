@@ -19,7 +19,7 @@ export default class Planet extends Phaser.Sprite {
   private _shader: Phaser.Filter
   private _uniforms: IPlanetUniforms
 
-  constructor(game: Phaser.Game, x: number, y: number, radius: number) {
+  constructor(game: Phaser.Game, x: number, y: number, radius: number, private _planetId) {
     super(game, 0, 0)
     this.width = this.game.width
     this.height = this.game.height

@@ -21,6 +21,11 @@ export namespace Images {
 
         static getPNG(): string { return require('assets/images/fire1.png') }
     }
+    export class ImagesFueltank {
+        static getName(): string { return 'fueltank' }
+
+        static getPNG(): string { return require('assets/images/fueltank.png') }
+    }
     export class ImagesSpaceShuttleBlack {
         static getName(): string { return 'space_shuttle_black' }
 
