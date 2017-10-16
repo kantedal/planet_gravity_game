@@ -132,6 +132,9 @@ export namespace Audiosprites {
 
 export namespace GoogleWebFonts {
     export const Barrio: string = 'Barrio'
+    export const Pixelar: string = 'Pixelar'
+    export const FR73Pixel: string = 'FR73 Pixel'
+    export const LibreBarcode39ExtendedText: string = 'Libre Barcode 39 Extended Text'
 }
 
 export namespace CustomWebFonts {

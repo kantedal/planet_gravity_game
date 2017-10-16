@@ -35,7 +35,10 @@ module.exports = {
 
             // The items below most likely the ones you should be modifying
             'GOOGLE_WEB_FONTS': JSON.stringify([ // Add or remove entries in this array to change which fonts are loaded
-                'Barrio'
+                'Barrio',
+                'Pixelar',
+                'FR73 Pixel',
+                'Libre Barcode 39 Extended Text'
             ]),
             'SOUND_EXTENSIONS_PREFERENCE': JSON.stringify([ // Re-order the items in this array to change the desired order of checking your audio sources (do not add/remove/modify the entries themselves)
                 'webm', 'ogg', 'm4a', 'mp3', 'aac', 'ac3', 'caf', 'flac', 'mp4', 'wav'
@@ -53,6 +56,7 @@ module.exports = {
         contentBase: path.join(__dirname, 'dist'),
         compress: true,
         port: 9000,
+        host: '192.168.2.159',
         inline: true,
         watchOptions: {
             aggregateTimeout: 300,

@@ -13,7 +13,7 @@ uniform float time;
 uniform vec2 grainRand;
 
 void main(void) {
-  vec3 backgroundColor = texture2D(uSampler, vec2(1.0) - vTextureCoord).xyz * vec3(1.0, 1.0, 1.0);
+  vec3 backgroundColor = texture2D(uSampler, vTextureCoord).xyz * vec3(1.0, 1.0, 1.0);
 
   float grainSize = 1.5;
   vec3 g = vec3(grain(vTextureCoord + grainRand, vec2(800.0, 600.0) / grainSize));
@@ -27,7 +27,7 @@ void main(void) {
   //threshold of the background luminance
   float response = smoothstep(0.05, 0.8, luminance);
   //color = mix(color, backgroundColor, );//pow(response, 2.0));
-  color = mix(backgroundColor, g, 0.075);
+  color = mix(backgroundColor, g, 0.125);
 
   gl_FragColor = vec4(color, 1.0);
   // gl_FragColor = vec4(vTextureCoord.x, vTextureCoord.y, 0.0, 0.0);

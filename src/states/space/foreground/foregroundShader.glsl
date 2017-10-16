@@ -20,7 +20,7 @@ void main(void) {
   float noise2 = noise(vec3(scale * 10.0 * (vTextureCoord + cameraPositionTexCoord + offset + vec2(0.0)), 0.5));
   float noise3 = noise(vec3(scale * 1.0 * (vTextureCoord + cameraPositionTexCoord + offset + vec2(0.0)), 1.4));
   float noise4 = noise(vec3(scale * 0.5 * (vTextureCoord + cameraPositionTexCoord + offset + vec2(0.0)), 10.4));
-  vec3 cloud = (noise1 + noise2 + noise3 + noise4) * vec3(1.0, 1.0, 1.0) * 0.01;
+  vec3 cloud = (noise1 + noise2 + noise3 + noise4) * vec3(1.0, 1.0, 1.0) * 0.02;
   gl_FragColor = vec4(cloud, 0.0);
 
   gl_FragColor += mix(-0.5/255.0, 0.5/255.0, noise2d(vTextureCoord * 400.0));

@@ -2,6 +2,7 @@
 import * as Assets from '../../../assets'
 import PlayerTrail from './player-trail/player-trail'
 import Planet from '../planet/planet'
+import {IBulletData} from '../../../socket'
 
 interface ISkyUniforms {
   screenSize: any
@@ -19,9 +20,17 @@ export default class Player extends Phaser.Group {
   private _uniforms: ISkyUniforms
 
   private _lastPosition: Phaser.Point
+  private _velocity: Phaser.Point
+
+  private _fuel: number = 100
+  private _health: number = 100
 
   private _bullets: any
-  private _fireRate: number = 100
+  private _bulletsData: IBulletData[]
+  private _totalBulletsCount: number = 50
+  private _aliveBulletsCount: number = 0
+
+  private _fireRate: number = 5
   private _nextFire: number = 0
 
   constructor(game: Phaser.Game, private _planets: Planet[]) {
@@ -35,7 +44,7 @@ export default class Player extends Phaser.Group {
     this._spaceShuttle.body.damping = 0.5
 
     this._lastPosition = new Phaser.Point(300, 300)
-
+    this._velocity = new Phaser.Point(0, 0)
     this.game.camera.follow(this._spaceShuttle, Phaser.Camera.FOLLOW_LOCKON, 0.05, 0.05)
     this.game.physics.p2.restitution = 0.0
     this._cursors = this.game.input.keyboard.createCursorKeys()
@@ -62,28 +71,37 @@ export default class Player extends Phaser.Group {
     // this._spaceShuttle.addChildAt(this._spaceShuttleTrail, 0)
     // this.add(this._spaceShuttleTrail)
 
+    this._bulletsData = []
     this._bullets = this.game.add.group()
     this._bullets.enableBody = true
     this._bullets.physicsBodyType = Phaser.Physics.P2JS
-    this._bullets.createMultiple(50, Assets.Images.ImagesFire1.getName())
+    this._bullets.createMultiple(this._totalBulletsCount, Assets.Images.ImagesFire1.getName())
+    let bulletIndex = 0
     this._bullets.forEach((bullet: Phaser.Sprite) => {
       bullet.width = 10
       bullet.height = 10
       bullet.body.setCircle(3)
       bullet.lifespan = 3000
+      bullet.data.index = bulletIndex++
+
+      this._bulletsData.push({
+        position: [0, 0],
+        force: 0
+      })
     })
+
 
     this.game.input.mouse.capture = true
     this.game.input.mspointer.stop()
   }
 
   public update() {
-    this._crosshair.position.x = this.game.camera.x + (this.game.width - this.game.input.mousePointer.x)
-    this._crosshair.position.y = this.game.camera.y + (this.game.height - this.game.input.mousePointer.y)
+    this._crosshair.position.x = this.game.camera.x + this.game.input.mousePointer.x
+    this._crosshair.position.y = this.game.camera.y + this.game.input.mousePointer.y
 
-    const velocity = this._spaceShuttle.position.clone().subtract(this._lastPosition.x, this._lastPosition.y)
+    this._velocity = this._spaceShuttle.position.clone().subtract(this._lastPosition.x, this._lastPosition.y)
     // velocity.normalize()
-    const moveAngle = Math.atan2(velocity.y, velocity.x)
+    const moveAngle = Math.atan2(this._velocity.y, this._velocity.x)
     this._spaceShuttle.body.rotation = moveAngle + Math.PI / 2.0
 
 
@@ -97,23 +115,32 @@ export default class Player extends Phaser.Group {
 
     // Accelerate
     if (this.game.input.activePointer.leftButton.isDown) {
-      this._spaceShuttle.body.force.x += moveDirection.x * 100
-      this._spaceShuttle.body.force.y += moveDirection.y * 100
+      this._spaceShuttle.body.force.x += moveDirection.x * 150
+      this._spaceShuttle.body.force.y += moveDirection.y * 150
 
       this._spaceShuttle.body.velocity.x += moveDirection.x * 5.0
       this._spaceShuttle.body.velocity.y += moveDirection.y * 5.0
+
+      this._fuel -= 0.1
     }
     else {
       this._spaceShuttle.body.force.x = moveDirection.x * speed
       this._spaceShuttle.body.force.y = moveDirection.y * speed
+
+      this._fuel += 0.05
     }
+
+    this._fuel = Math.max(0, Math.min(this._fuel, 100))
 
     // Shoot
     if (this.game.input.keyboard.addKey(32).isDown) {
       if (this.game.time.now > this._nextFire && this._bullets.countDead() > 0) {
         this._nextFire = this.game.time.now + this._fireRate
         const bullet = this._bullets.getFirstDead()
-        const bulletDirection = this._crosshair.position.clone().subtract(this._spaceShuttle.position.x, this._spaceShuttle.position.y).normalize() // velocity.clone().normalize()
+        const bulletDirection = this._crosshair.position.clone().subtract(
+          this._spaceShuttle.position.x + 30 * (Math.random() - 0.5),
+          this._spaceShuttle.position.y + 30 * (Math.random() - 0.5)
+        ).normalize() // velocity.clone().normalize()
 
         bullet.reset(this._spaceShuttle.x + bulletDirection.x * 20, this._spaceShuttle.y + bulletDirection.y * 20)
         bullet.body.velocity.x = bulletDirection.x * 400
@@ -135,11 +162,25 @@ export default class Player extends Phaser.Group {
       })
     }
 
-    this._bullets.forEachAlive((bullet: Phaser.Sprite) => bullet.alpha *= 0.985 )
+    this._aliveBulletsCount = 0
+    this._bullets.forEachAlive((bullet: Phaser.Sprite, i) => {
+      bullet.alpha *= 0.985
+      this._bulletsData[bullet.data.index] = { position: [bullet.position.x, bullet.position.y], force: bullet.alpha }
+      this._aliveBulletsCount++
+    })
 
     // this._spaceShuttleTrail.refresh(this._spaceShuttle.position)
   }
 
   public refresh(sunPosition: Phaser.Point) {
   }
+
+  get spaceShuttle() { return this._spaceShuttle }
+  get velocity() { return this._velocity }
+  get fuel() { return this._fuel }
+  get bulletsData() { return this._bulletsData }
+  get aliveBulletsCount(): number { return this._aliveBulletsCount }
+  get totalBulletsCount(): number { return this._totalBulletsCount }
+  get health(): number { return this._health }
+  set health(value: number) { this._health = value }
 }

@@ -2,8 +2,9 @@ import Foreground from './foreground/foreground'
 import SkyLayer from './sky-layer/sky-layer'
 import Sky from './sky-background/sky'
 import Sun from './sun/sun'
-import Planet from './planet/planet';
+import Planet from './planet/planet'
 const spaceShader = require('raw-loader!glslify!./spaceShader.frag')
+const chromaticShader = require('raw-loader!glslify!./shaders/chromatic-aberration.glsl')
 
 interface ISpaceUniforms {
   screenSize: any
@@ -22,6 +23,8 @@ export default class Environment {
   private _spaceGroup: Phaser.Group
   private _spaceShader: Phaser.Filter
   private _spaceShaderUniforms: ISpaceUniforms
+  private _chromaticShader: Phaser.Filter
+  private _chromaticShaderUniforms: any
   private _renderTexture: Phaser.RenderTexture
   private _outputSprite: Phaser.Sprite
 
@@ -41,11 +44,18 @@ export default class Environment {
 
     this._spaceShaderUniforms = {
       screenSize: { type: '2f', value: { x: this.game.width, y: this.game.height }},
-      time: { type: '1f', value: this.game.time.time / 10000 },
+      time: { type: '1f', value: this.game.time.now },
       grainRand: { type: '2f', value: { x: 2.0 * (Math.random() - 0.5), y: 2.0 * (Math.random() - 0.5) }},
     }
     this._spaceShader = new Phaser.Filter(this.game, this._spaceShaderUniforms, spaceShader)
-    this.game.world.filters = [this._spaceShader]
+
+    this._chromaticShaderUniforms = {
+      screenSize: { type: '2f', value: { x: this.game.width, y: this.game.height }},
+      time: { type: '1f', value: this.game.time.now },
+    }
+    this._chromaticShader = new Phaser.Filter(this.game, this._chromaticShaderUniforms, chromaticShader)
+
+    this.game.world.filters = [this._spaceShader, this._chromaticShader]
 
     this._planets = []
 
@@ -74,9 +84,12 @@ export default class Environment {
     this._foregroundLayer1.refresh()
     this._foregroundLayer2.refresh()
 
-    this._spaceShaderUniforms.time.value = this.game.time.time / 10000 - 150532758
+    this._spaceShaderUniforms.time.value = this.game.time.now * 0.001
     this._spaceShaderUniforms.grainRand.value = { x: 2.0 * (Math.random() - 0.5), y: 2.0 * (Math.random() - 0.5) }
     this._spaceShader.syncUniforms()
+
+    this._chromaticShaderUniforms.time.value = this.game.time.now * 0.0005
+    this._chromaticShader.syncUniforms()
 
     if (this._renderTexture) {
       this._renderTexture.renderXY(this.game.world, camera.x, camera.y, true)
