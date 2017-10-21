@@ -6,6 +6,7 @@ import * as WebFontLoader from 'webfontloader'
 
 import Boot from './states/boot'
 import Preloader from './states/preloader'
+import StartScreen from './states/start-screen'
 import Title from './states/title'
 import * as Utils from './utils/utils'
 import * as Assets from './assets'
@@ -49,7 +50,7 @@ function startApp(): void {
     parent: '',
     antialias: true,
     resolution: 1
-  };
+  }
 
   let app = new App(gameConfig)
 }
@@ -72,7 +73,7 @@ window.onload = () => {
     webFontLoaderOptions.custom = {
       families: [],
       urls: []
-    };
+    }
 
     for (let font in Assets.CustomWebFonts) {
       webFontLoaderOptions.custom.families.push(Assets.CustomWebFonts[font].getFamily())
@@ -87,4 +88,4 @@ window.onload = () => {
     webFontLoaderOptions.active = startApp
     WebFontLoader.load(webFontLoaderOptions)
   }
-};
+}

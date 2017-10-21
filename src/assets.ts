@@ -26,6 +26,16 @@ export namespace Images {
 
         static getPNG(): string { return require('assets/images/fueltank.png') }
     }
+    export class ImagesMouseRightClick1600 {
+        static getName(): string { return 'mouse_right_click1600' }
+
+        static getPNG(): string { return require('assets/images/mouse_right_click1600.png') }
+    }
+    export class ImagesMouseClick {
+        static getName(): string { return 'mouse-click' }
+
+        static getPNG(): string { return require('assets/images/mouse-click.png') }
+    }
     export class ImagesSpaceShuttleBlack {
         static getName(): string { return 'space_shuttle_black' }
 
@@ -36,10 +46,20 @@ export namespace Images {
 
         static getPNG(): string { return require('assets/images/space_shuttle.png') }
     }
+    export class ImagesSpace {
+        static getName(): string { return 'space' }
+
+        static getPNG(): string { return require('assets/images/space.png') }
+    }
     export class ImagesSquareTest {
         static getName(): string { return 'squareTest' }
 
         static getPNG(): string { return require('assets/images/squareTest.png') }
+    }
+    export class ImagesStartgame {
+        static getName(): string { return 'startgame' }
+
+        static getPNG(): string { return require('assets/images/startgame.png') }
     }
     export class ImagesTest {
         static getName(): string { return 'test' }
@@ -140,6 +160,7 @@ export namespace GoogleWebFonts {
     export const Pixelar: string = 'Pixelar'
     export const FR73Pixel: string = 'FR73 Pixel'
     export const LibreBarcode39ExtendedText: string = 'Libre Barcode 39 Extended Text'
+    export const SpaceMono: string = 'Space Mono'
 }
 
 export namespace CustomWebFonts {

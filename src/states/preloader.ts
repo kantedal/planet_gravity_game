@@ -1,5 +1,5 @@
-import * as Assets from '../assets';
-import * as AssetUtils from '../utils/assetUtils';
+import * as Assets from '../assets'
+import * as AssetUtils from '../utils/assetUtils'
 
 export default class Preloader extends Phaser.State {
   private preloadBarSprite: Phaser.Sprite

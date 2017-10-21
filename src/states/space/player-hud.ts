@@ -14,6 +14,8 @@ export default class PlayerHud extends Phaser.Group {
   private _ammoFrameSprite: Phaser.Sprite
   private _ammoText: Phaser.Text
 
+  private _scoreText: Phaser.Text
+
   constructor(game: Phaser.Game, private _player: Player) {
     super(game)
     const xPos = 10
@@ -65,11 +67,19 @@ export default class PlayerHud extends Phaser.Group {
     this._ammoText.addColor('#ffffff', 0)
     this._ammoText.alpha = 0.6
     this._ammoText.fixedToCamera = true
+
+    this._scoreText = this.game.add.text(game.width * 0.5, this.game.height - 50, 'SCORE: 0', { font: '50px ' + Assets.GoogleWebFonts.LibreBarcode39ExtendedText })
+    this._scoreText.anchor.setTo(0.5)    
+    this._scoreText.addColor('#ffffff', 0)
+    this._scoreText.alpha = 0.6
+    this._scoreText.fixedToCamera = true
   }
 
   public update() {
     this._fuelBarSprite.scale.set(this._player.fuel / 100, 1.0)
     this._ammoBarSprite.scale.set((this._player.totalBulletsCount - this._player.aliveBulletsCount) / this._player.totalBulletsCount, 1.0)
     this._healthBarSprite.scale.set(this._player.health / 100, 1.0)
+
+    this._scoreText.setText('SCORE: ' + this._player.score)
   }
 }

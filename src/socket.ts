@@ -37,6 +37,31 @@ export default class Socket {
   }
 
   public connect() {
+    
+
+    this._server = io('http://192.168.2.159:4000')
+    // this._server = io('http://172.20.10.2:4000')
+    // this._server = io('http://10.253.225.5:4000')
+
+    this._server.on('connect', () => {
+      this._isConnected = true
+      
+    })
+
+    this._server.on('disconnect', () => this._isConnected = false)
+    this._server.on('updatePlayers', (playersData) => this._networkListener.updatePlayers(playersData))
+    this._server.on('playerDisconnected', (playerId) => this._networkListener.playerDisconnected(playerId))
+    this._server.on('playerConnected', (playerData) => this._networkListener.playerConnected(playerData))
+    this._server.on('init', (gameData) => {
+      this._networkListener.setupGame(gameData.gameSetup)
+      for (const playerId in gameData.players) {
+        this._networkListener.playerConnected(gameData.players[playerId])
+      }
+    })
+    this._server.on('updateGame', (gameSetup: IGameSetup) => this._networkListener.updateGame(gameSetup))
+  }
+
+  startGame() {
     const playerData = {
       id: this._playerId,
       name: '',
@@ -45,26 +70,7 @@ export default class Socket {
       bullets: []
     }
 
-    //this._server = io('http://172.20.10.2:4000')
-    this._server = io('http://10.253.225.5:4000')
-
-    this._server.on('connect', () => {
-      this._isConnected = true
-      this._server.emit('connectPlayer', playerData)
-    })
-
-    this._server.on('disconnect', () => this._isConnected = false)
-    this._server.on('updatePlayers', (playersData) => this._networkListener.updatePlayers(playersData))
-    this._server.on('playerDisconnected', (playerId) => this._networkListener.playerDisconnected(playerId))
-    this._server.on('playerConnected', (playerData) => this._networkListener.playerConnected(playerData))
-    this._server.on('init', (gameData) => {
-      console.log('init game', gameData)
-      this._networkListener.setupGame(gameData.gameSetup)
-      for (const playerId in gameData.players) {
-        this._networkListener.playerConnected(gameData.players[playerId])
-      }
-    })
-    this._server.on('updateGame', (gameSetup: IGameSetup) => this._networkListener.updateGame(gameSetup))
+    this._server.emit('connectPlayer', playerData)
   }
 
   updatePlayerData(playerData: IPlayerData) {

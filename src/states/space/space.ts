@@ -5,10 +5,12 @@ import PlayerHud from './player-hud'
 import Socket, {IGameSetup, INetworkListener, IPlayerData} from '../../socket'
 import Planet from './planet/planet'
 import FuelTank from './fuel-tank'
+import StartScreen, { IStartScreenListener } from './start-screen'
 
-export default class Space extends Phaser.State implements INetworkListener {
+export default class Space extends Phaser.State implements INetworkListener, IStartScreenListener {
   private _socket: Socket
   private _initialized: boolean
+  private _startScreen: StartScreen
   private _player: Player
   private _playerHud: PlayerHud
   private _opponentPlayers: { [playerId: string]: OpponentPlayer }
@@ -31,6 +33,13 @@ export default class Space extends Phaser.State implements INetworkListener {
     this._opponentPlayers = {}
 
     this._initialized = false
+
+    this._startScreen = new StartScreen(this.game, this)   
+    this._startScreen.init()
+
+    this._player = new Player(this.game, this._environment.planets)
+    this.game.add.existing(this._player)  
+
     // this._renderTexture = this.game.add.renderTexture(this.game.width, this.game.height, 'texture1')
     // this._outputSprite = this.game.add.sprite(0, 0)
     // this._outputSprite.fixedToCamera = true
@@ -57,7 +66,7 @@ export default class Space extends Phaser.State implements INetworkListener {
 
       for (const fuelTankId in this._fuelTanks) {
         const fuelTank = this._fuelTanks[fuelTankId]
-        if (Phaser.Point.distance(fuelTank.fuelTankSprite.position, this._player.spaceShuttle.position) < 10) {
+        if (Phaser.Point.distance(fuelTank.fuelTankSprite.position, this._player.spaceShuttle.position) < 20) {
           this._socket.fuelTankTaken(fuelTankId)
           this._player.fuel = Math.min(100, this._player.fuel + 50)
         }
@@ -65,7 +74,7 @@ export default class Space extends Phaser.State implements INetworkListener {
 
       if (this._player.health === 0) {
         this._socket.disconnect()
-        this.game.state.start('gameover')
+        this.game.state.start('gameover', true, false, { score: this._player.score } )
       }
     }
   }
@@ -98,11 +107,15 @@ export default class Space extends Phaser.State implements INetworkListener {
     }
   }
 
+  public startGame() {
+    this._startScreen.hide()
+    this._socket.startGame()
+  }
+
   public setupGame(gameSetup: IGameSetup) {
     this._environment.initPlanets(gameSetup.planets)
 
-    this._player = new Player(this.game, this._environment.planets)
-    this.game.add.existing(this._player)
+    this._player.initialize()
 
     this._playerHud = new PlayerHud(this.game, this._player)
 
