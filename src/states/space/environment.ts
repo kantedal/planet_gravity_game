@@ -78,11 +78,11 @@ export default class Environment {
     this._chromaticShaderUniforms.time.value = this.game.time.now * 0.0005
     this._chromaticShader.syncUniforms()
 
-    if (this._renderTexture) {
-      this._renderTexture.renderXY(this.game.world, camera.x, camera.y, true)
-      this._outputSprite.setTexture(this._renderTexture)
-      this._outputSprite.position.set(-camera.x, -camera.y)
-    }
+    // if (this._renderTexture) {
+    //   this._renderTexture.renderXY(this.game.world, camera.x, camera.y, true)
+    //   this._outputSprite.setTexture(this._renderTexture)
+    //   this._outputSprite.position.set(-camera.x, -camera.y)
+    // }
 
     for (const planet of this._planets) {
       planet.refresh(this._sun.position)

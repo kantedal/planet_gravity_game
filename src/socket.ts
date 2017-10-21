@@ -45,7 +45,8 @@ export default class Socket {
       bullets: []
     }
 
-    this._server = io('http://192.168.2.159:4000')
+    //this._server = io('http://172.20.10.2:4000')
+    this._server = io('http://10.253.225.5:4000')
 
     this._server.on('connect', () => {
       this._isConnected = true
