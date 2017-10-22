@@ -36,7 +36,7 @@ export default class StartScreen {
     this._startScreenGroup.addChild(this._descriptionText)
 
     const keyInstructionHeight = 0.55
-    const keyImagesHeight = 0.61
+    const keyImagesHeight = 0.63
 
     this._spaceInstructions = new Phaser.Text(this._game, this._game.width * 0.3, this._game.height * keyInstructionHeight, 'Click space to fire!', { font: '20px ' + Assets.GoogleWebFonts.SpaceMono})
     this._spaceInstructions.anchor.set(0.5)

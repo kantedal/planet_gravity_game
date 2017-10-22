@@ -127,7 +127,9 @@ export default class Player extends Phaser.Group {
         this._spaceShuttle.body.velocity.x += moveDirection.x * 5.0
         this._spaceShuttle.body.velocity.y += moveDirection.y * 5.0
   
-        this._fuel -= 0.15
+        this._fuel -= (0.15 ) 
+
+        this._score += 1    
       }
       else {
         this._spaceShuttle.body.force.x = moveDirection.x * 75
@@ -136,7 +138,6 @@ export default class Player extends Phaser.Group {
         this._fuel += 0.02
       }
 
-      this._score += 1
   
       this._fuel = Math.max(0, Math.min(this._fuel, 100))
   
@@ -158,8 +159,6 @@ export default class Player extends Phaser.Group {
           bullet.lifespan = 3000
         }
       }
-
-      this._health -= 0.5
   
       for (const planet of this._planets) {
         const planetGravity = planet.calculateGravityForce(this._spaceShuttle.position)
